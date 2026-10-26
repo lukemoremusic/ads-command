@@ -41,3 +41,10 @@ Never commit OpenAI or TikTok secrets, customer data, or payment credentials. Pr
 Open [GitHub Actions](https://github.com/lukemoremusic/ads-command/actions/workflows/windows-build.yml), select **Windows Installer → Run workflow → main**. After the job completes, download the **ADS-COMMAND-Windows-x64** artifact and unpack it. Run the included `ADS-COMMAND-Setup-1.0.0-x64.exe`. It is currently unsigned, so Windows SmartScreen may warn. Verify the origin before running and do not disable security protections globally.
 
 For local Windows development, install Node.js 22+, then run `npm install`, `npm start`, or `npm run dist:win` to produce the installer. The app's data is local to each machine: it does not sync between Windows and Mac yet. Automatic updates are not production-ready until a trusted signing and release process is established.
+
+
+## v1.1.0 — TikTok integration preparation
+- New **TikTok Connect** tab showing actual readiness; connection disabled until app verification, backend OAuth callback and API authorization.
+- **Creative images imported into persistent app data** using a native file picker. Only image filenames and generated IDs are stored in campaign records. Files are stored per machine in the Electron user data directory. Import currently does NOT upload creatives to TikTok or sync them to the cloud.
+- No OpenAI integration and no live ad creation yet. This release is **not** a fully autonomous ad manager.
+- To build Windows use **GitHub Actions → Windows Installer → Run workflow** on main. Builds are not automatically pushed to already-installed apps unless a release/update publishing pipeline is configured.
