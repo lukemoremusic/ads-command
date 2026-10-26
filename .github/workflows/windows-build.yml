@@ -1,6 +1,11 @@
 name: Windows Installer
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Existing version tag to publish/update (e.g. v1.2.0); leave blank for test artifact only'
+        required: false
+        type: string
   push:
     tags:
       - 'v*'
@@ -11,6 +16,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -18,17 +25,25 @@ jobs:
         shell: pwsh
         run: |
           if (Test-Path package-lock.json) { npm ci } else { npm install }
-      - name: Validate version tag
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Validate requested release
+        if: ${{ inputs.release_tag != '' || startsWith(github.ref, 'refs/tags/') }}
         shell: pwsh
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
         run: |
           $version = node -p "require('./package.json').version"
-          if ("${{ github.ref_name }}" -ne "v$version") { throw "Release tag must match package version v$version" }
+          if ($env:RELEASE_TAG -ne "v$version") { throw "Release tag must match package version v$version" }
       - name: Build Windows installer
         run: npm run dist:win
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - name: Upload installer
+      - name: Verify updater assets
+        shell: pwsh
+        run: |
+          $metadata = Get-Item release/latest.yml -ErrorAction Stop
+          $installer = Get-ChildItem release/*.exe -ErrorAction Stop
+          if ($metadata.Length -lt 30 -or !$installer) { throw "Missing update metadata or installer" }
+      - name: Upload installer as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: ADS-COMMAND-Windows-x64
@@ -37,12 +52,14 @@ jobs:
             release/*.blockmap
             release/latest.yml
           if-no-files-found: error
-      - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Publish updater assets to GitHub Release
+        if: ${{ inputs.release_tag != '' || startsWith(github.ref, 'refs/tags/') }}
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
           draft: false
           prerelease: false
+          fail_on_unmatched_files: true
           files: |
             release/*.exe
             release/*.blockmap
