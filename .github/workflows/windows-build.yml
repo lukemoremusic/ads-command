@@ -33,6 +33,16 @@ jobs:
         run: |
           $version = node -p "require('./package.json').version"
           if ($env:RELEASE_TAG -ne "v$version") { throw "Release tag must match package version v$version" }
+      - name: Embed build identity and feature manifest
+        shell: pwsh
+        run: |
+          $info = Get-Content build-info.json -Raw | ConvertFrom-Json
+          $info.version = (node -p "require('./package.json').version")
+          $info.commit = (git rev-parse --short=12 HEAD)
+          $info.builtAt = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+          $info | ConvertTo-Json -Depth 8 | Set-Content build-info.json -Encoding utf8
+          Write-Host ("Bundled build commit: " + $info.commit)
+          if (!$info.features -or $info.features.Count -lt 5) { throw "Feature manifest incomplete" }
       - name: Build Windows installer
         run: npm run dist:win
         env:
