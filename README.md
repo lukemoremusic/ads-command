@@ -1,19 +1,38 @@
-# ADS COMMAND
+# ADS COMMAND — macOS Apple Silicon
 
-Windows desktop app for managing Spotify playlist promotion campaigns, initially focused on TikTok Ads.
+Electron desktop **foundation** for a TikTok-first Spotify playlist promotion agency.
 
-## Status
-Early prototype (v0.2). Campaign creation and budget tracking are local-only. There is no live TikTok Ads publishing, OpenAI analysis or payment processing yet.
+## Current functionality
+- Create client campaigns with a Spotify playlist URL.
+- Split customer budgets 70% ad spend / 30% management fee.
+- Record file names of user-supplied creatives (files **are not persisted yet**).
+- Enter cumulative TikTok spend manually.
+- Log Spotify playlist save counts manually.
+- Stop/restart campaigns **locally** and add manual budget records.
+- Export data to JSON.
+- macOS arm64 DMG/ZIP build workflow and GitHub update hooks.
 
-## Intended workflow
-1. Register client, playlist URL and total budget.
-2. Allocate 30% agency fee and 70% ad budget.
-3. Upload user-produced two-image creatives.
-4. Test creatives using a limited budget (after TikTok integration).
-5. Record daily playlist saves manually, with clear attribution caveats.
-6. Review results, optimize and either stop or add budget.
+**This does not yet publish or pause actual TikTok ads, collect payment, call OpenAI or autonomously optimize campaigns.** Save growth is not proven ad-attributed.
 
-## Desktop updates
-Use Electron/electron-updater with GitHub Releases after publishing a signed or appropriately tested Windows installer. Do not commit tokens, API secrets or customer data.
+## Run on Mac
+Install Node.js 22+, clone repository and run:
+```bash
+npm install
+npm start
+```
+To package locally: `npm run dist:mac`.
 
-The full desktop source needs to be added to this repository before it can build releases.
+## Build a downloadable Mac test installer
+Go to GitHub **Actions → macOS ARM64 Release → Run workflow**. After completion, download the build artifact containing the unsigned .dmg and .zip. macOS Gatekeeper may block unsigned apps; do not disable system protection indiscriminately. For distribution and automatic updates, configure an Apple Developer ID certificate, hardened runtime and notarization. The workflow currently creates draft releases on a `v*` tag; do not release as production before signing and testing.
+
+## Secrets and security
+Never commit OpenAI or TikTok secrets, customer data, or payment credentials. Production integration requires a secure backend, API authorization, logging, spend guardrails and safe credential storage.
+
+## v1 integration milestones
+1. Real creative file storage and preview.
+2. OAuth-backed TikTok Business API connection and read-only reporting.
+3. Test-mode campaign creation with explicit budget approvals.
+4. Controlled publishing, monitoring and pause operations.
+5. Reliable Spotify save checkpoints and attribution estimates.
+6. OpenAI-powered recommendations backed by verified results.
+7. Signed/notarized updates and cloud-based background jobs.
