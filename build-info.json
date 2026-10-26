@@ -1,0 +1,12 @@
+{
+  "version": "1.2.1",
+  "commit": "development",
+  "builtAt": "local",
+  "features": [
+    "campaign-analyst",
+    "test-budget",
+    "save-tracking",
+    "creative-import",
+    "tiktok-status"
+  ]
+}
