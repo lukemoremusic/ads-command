@@ -36,3 +36,8 @@ Never commit OpenAI or TikTok secrets, customer data, or payment credentials. Pr
 5. Reliable Spotify save checkpoints and attribution estimates.
 6. OpenAI-powered recommendations backed by verified results.
 7. Signed/notarized updates and cloud-based background jobs.
+
+## Windows x64 test installer
+Open [GitHub Actions](https://github.com/lukemoremusic/ads-command/actions/workflows/windows-build.yml), select **Windows Installer → Run workflow → main**. After the job completes, download the **ADS-COMMAND-Windows-x64** artifact and unpack it. Run the included `ADS-COMMAND-Setup-1.0.0-x64.exe`. It is currently unsigned, so Windows SmartScreen may warn. Verify the origin before running and do not disable security protections globally.
+
+For local Windows development, install Node.js 22+, then run `npm install`, `npm start`, or `npm run dist:win` to produce the installer. The app's data is local to each machine: it does not sync between Windows and Mac yet. Automatic updates are not production-ready until a trusted signing and release process is established.
