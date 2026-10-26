@@ -1,7 +1,7 @@
 {
   "name": "ads-command",
   "productName": "ADS COMMAND",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "TikTok playlist promotion command center",
   "main": "main.js",
