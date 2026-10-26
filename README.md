@@ -63,3 +63,11 @@ To publish the next release:
 
 ⚠️ Important: The automatic updater requires a correctly published release and working metadata. Version 1.1.0 is configured, but do not assume a release exists until the tagged workflow has completed. No code signing is configured; for production, sign the installer and ensure trusted release provenance. Mac releases need additional Apple signing and notarization.
 
+
+## ADS COMMAND v1.3.0 — AI Manager (private testing)
+- Render backend API endpoint: `POST /api/chat`, protected with `ADMIN_API_TOKEN`.
+- Desktop **AI Manager** tab: enter the admin token once per app session, pick campaigns, ask the AI questions.
+- Render must deploy the latest `main` commit before using the AI chat.
+- This is NOT a production-ready multiuser login: never include the admin token in release files or distribute it to customers.
+- Chat history is kept only in the running app session; long-term AI memory and automated TikTok operations are NOT implemented.
+- To distribute v1.3.0, publish a GitHub release tag `v1.3.0` pointing at the completed commit and verify the Windows workflow generates installer and `latest.yml`.
