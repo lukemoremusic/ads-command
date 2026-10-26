@@ -1,0 +1,57 @@
+{
+  "name": "ads-command",
+  "productName": "ADS COMMAND",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TikTok playlist promotion command center",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac dmg zip --arm64 --publish never",
+    "release:mac": "electron-builder --mac dmg zip --arm64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.lukemoremusic.adscommand",
+    "productName": "ADS COMMAND",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.business",
+      "hardenedRuntime": true
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "lukemoremusic",
+      "repo": "ads-command",
+      "releaseType": "release"
+    }
+  }
+}
