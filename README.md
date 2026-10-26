@@ -48,3 +48,18 @@ For local Windows development, install Node.js 22+, then run `npm install`, `npm
 - **Creative images imported into persistent app data** using a native file picker. Only image filenames and generated IDs are stored in campaign records. Files are stored per machine in the Electron user data directory. Import currently does NOT upload creatives to TikTok or sync them to the cloud.
 - No OpenAI integration and no live ad creation yet. This release is **not** a fully autonomous ad manager.
 - To build Windows use **GitHub Actions → Windows Installer → Run workflow** on main. Builds are not automatically pushed to already-installed apps unless a release/update publishing pipeline is configured.
+
+
+## In-app updates (Windows)
+The installed application has **Settings → Check for updates / Download update / Install update**.
+The auto-updater reads **published** GitHub Releases from `lukemoremusic/ads-command`. Files stored only under Actions → Artifacts are **not** update feeds.
+
+To publish the next release:
+1. Change `package.json` version, commit, and test locally.
+2. Create and push the Git tag matching it exactly, for example `v1.1.0`.
+3. GitHub Actions → Windows Installer builds the NSIS `.exe`, `.blockmap` and `latest.yml` and publishes them in a non-draft GitHub Release.
+4. Validate the Release assets and installation/update on a test machine before broad distribution.
+5. In the *older installed version*, choose **Settings → Auf Updates prüfen**, then **Update herunterladen**, then **Update installieren**.
+
+⚠️ Important: The automatic updater requires a correctly published release and working metadata. Version 1.1.0 is configured, but do not assume a release exists until the tagged workflow has completed. No code signing is configured; for production, sign the installer and ensure trusted release provenance. Mac releases need additional Apple signing and notarization.
+
