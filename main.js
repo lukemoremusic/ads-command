@@ -38,3 +38,24 @@ ipcMain.handle('creatives-import',async()=>{
  }
  return files;
 });
+
+let aiSessionToken='';
+ipcMain.handle('ai-connect',(_,token)=>{
+ if(typeof token!=='string'||token.length<30||token.length>256||/[\r\n\x00-\x1f\x7f]/.test(token))throw Error('Ungültiger Zugriffsschlüssel');
+ aiSessionToken=token;return {connected:true};
+});
+ipcMain.handle('ai-disconnect',()=>{aiSessionToken='';return {connected:false}});
+ipcMain.handle('ai-chat',async(_,payload)=>{
+ if(!aiSessionToken)throw Error('Bitte zuerst mit dem Server verbinden');
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),35000);
+ try{
+  const reply=await fetch('https://ads-command.onrender.com/api/chat',{
+   method:'POST',headers:{authorization:'Bearer '+aiSessionToken,'content-type':'application/json'},
+   body:JSON.stringify(payload),signal:ctrl.signal
+  });
+  const data=await reply.json();
+  if(!reply.ok)throw Error(data.error||'Backendfehler '+reply.status);
+  if(typeof data.answer!=='string'||!data.answer.trim())throw Error('Leere KI-Antwort');
+  return {answer:data.answer};
+ }finally{clearTimeout(timer)}
+});
