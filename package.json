@@ -8,7 +8,9 @@
   "scripts": {
     "start": "electron .",
     "dist:mac": "electron-builder --mac dmg zip --arm64 --publish never",
-    "release:mac": "electron-builder --mac dmg zip --arm64 --publish always"
+    "release:mac": "electron-builder --mac dmg zip --arm64 --publish always",
+    "dist:win": "electron-builder --win nsis --x64 --publish never",
+    "release:win": "electron-builder --win nsis --x64 --publish always"
   },
   "dependencies": {
     "electron-updater": "^6.6.2"
@@ -52,6 +54,23 @@
       "owner": "lukemoremusic",
       "repo": "ads-command",
       "releaseType": "release"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "ADS-COMMAND-Setup-${version}-${arch}.${ext}"
     }
   }
 }
