@@ -1,2 +1,2 @@
 const {contextBridge,ipcRenderer}=require('electron');
-contextBridge.exposeInMainWorld('desktop',{info:()=>ipcRenderer.invoke('update-info'),check:()=>ipcRenderer.invoke('update-check'),download:()=>ipcRenderer.invoke('update-download'),install:()=>ipcRenderer.invoke('update-install'),onUpdate:fn=>ipcRenderer.on('update-status',(_,data)=>fn(data))});
+contextBridge.exposeInMainWorld('desktop',{info:()=>ipcRenderer.invoke('update-info'),check:()=>ipcRenderer.invoke('update-check'),download:()=>ipcRenderer.invoke('update-download'),install:()=>ipcRenderer.invoke('update-install'),onUpdate:fn=>ipcRenderer.on('update-status',(_,data)=>fn(data)),importCreatives:()=>ipcRenderer.invoke('creatives-import')});
