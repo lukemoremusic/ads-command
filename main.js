@@ -1,6 +1,7 @@
 const {app,BrowserWindow,ipcMain,shell,dialog}=require('electron');
 const fs=require('fs/promises');
 const crypto=require('crypto');
+const buildInfo=require('./build-info.json');
 const path=require('path');
 const {autoUpdater}=require('electron-updater');
 let win; let update={state:'idle',detail:'Noch nicht geprüft'};
@@ -13,7 +14,7 @@ autoUpdater.on('update-not-available',()=>report('current','Aktuellste Version')
 autoUpdater.on('download-progress',p=>report('downloading',Math.round(p.percent)+' %'));
 autoUpdater.on('update-downloaded',()=>report('ready','Update bereit zur Installation'));
 autoUpdater.on('error',e=>report('error',e.message));
-ipcMain.handle('update-info',()=>({...update,version:app.getVersion(),packaged:app.isPackaged}));
+ipcMain.handle('update-info',()=>({...update,version:app.getVersion(),packaged:app.isPackaged,build:buildInfo}));
 ipcMain.handle('update-check',async()=>{if(!app.isPackaged)return report('unavailable','Updatefunktion erst in installierter App')||update;try{await autoUpdater.checkForUpdates()}catch(e){report('error',e.message)}return update});
 ipcMain.handle('update-download',async()=>{try{await autoUpdater.downloadUpdate()}catch(e){report('error',e.message)}return update});
 ipcMain.handle('update-install',()=>{if(update.state==='ready')setImmediate(()=>autoUpdater.quitAndInstall())});
